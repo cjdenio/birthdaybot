@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      * {
+        font-family: "Roboto";
+      }
+      html,
+      body {
+        background: white;
+        overflow: hidden;
+        margin: 0;
+      }
+      html,
+      body,
+      div.main {
+        height: 100%;
+      }
+
+      .avatar {
+        border-radius: 50%;
+        height: 15vw;
+        width: 15vw;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
+      }
+      div.content {
+        text-align: center;
+      }
+      .birthday,
+      .date {
+        font-size: 3vw;
+        margin: 0;
+        font-weight: 900;
+        color: gray;
+      }
+      .birthday {
+        position: absolute;
+        font-size: 4vw;
+        top: 1vw;
+        left: 2vw;
+      }
+      .heading {
+        font-weight: 900;
+        font-size: 9vw;
+        margin: 2vw;
+      }
+      .gradient {
+        background-image: linear-gradient(
+          to bottom right,
+          #ff8c37,
+          #ec3750 66%
+        );
+        background-repeat: no-repeat;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .handle {
+        color: rgb(177, 177, 177);
+        background-color: transparent;
+        -webkit-text-fill-color: initial;
+        font-weight: normal;
+      }
+      .hat {
+        position: absolute;
+        bottom: 65%;
+        left: 45%;
+        transform: rotate(35deg);
+        height: 15vw;
+      }
+    </style>
+  </head>
+  <body>
+    <h3 class="birthday">
+      Happy Birthday! &#x1f389;
+    </h3>
+    <div
+      class="main"
+      style="
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div class="content">
+        <div style="position: relative; display: inline-block;">
+          <img class="hat" src="https://hackclub-birthday-bot.now.sh/static/party-hat.svg" />
+          <img class="avatar" src="{{ image }}" />
+        </div>
+        <h1 class="heading gradient">
+          <span class="handle">@</span>{{ text }}
+        </h1>
+        <h3 class="date"><span class="gradient">Born on</span> {{ date }}</h3>
+      </div>
+    </div>
+
+    <script>
+      twemoji.parse(document.body);
+    </script>
+  </body>
+</html>
