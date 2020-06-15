@@ -10,12 +10,15 @@ import (
 
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 )
 
 // CronHandler handles the daily cron job.
 func CronHandler(res http.ResponseWriter, req *http.Request) {
+	//api := slack.New(os.Getenv("SLACK_TOKEN"))
+
+	res.Write([]byte("OK"))
+
 	db, err := mongo.NewClient(options.Client().ApplyURI(os.Getenv("DB_URL")))
 
 	if err != nil {
@@ -37,6 +40,5 @@ func CronHandler(res http.ResponseWriter, req *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	res.Header().Add("Content-type", "text/plain")
-	res.Write([]byte(strconv.FormatInt(count, 10)))
+	fmt.Println(count)
 }

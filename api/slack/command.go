@@ -23,7 +23,12 @@ import (
 
 // CommandHandler handles the /birthday slash command
 func CommandHandler(res http.ResponseWriter, req *http.Request) {
+	fmt.Println(os.Getenv("DB_URL"))
+
 	db, err := mongo.NewClient(options.Client().ApplyURI(os.Getenv("DB_URL")))
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
 	defer cancel()
