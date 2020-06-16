@@ -33,8 +33,10 @@ func CronHandler(res http.ResponseWriter, req *http.Request) {
 		fmt.Println(err.Error())
 	}
 
+	defer db.Disconnect(ctx)
+
 	collection := db.Database("birthdaybot").Collection("birthdays")
-	count, err := collection.CountDocuments(ctx, bson.D{{Key: "birthday", Value: time.Now().Format("2006-01-02")}})
+	count, err := collection.CountDocuments(ctx, bson.D{{Key: "date", Value: time.Now().Format("01-02")}})
 
 	if err != nil {
 		fmt.Println(err.Error())

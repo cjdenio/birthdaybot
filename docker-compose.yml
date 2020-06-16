@@ -8,7 +8,9 @@ services:
     environment:
       GO_ENV: development
     volumes:
-      - "./usr/src/app"
+      - ".:/usr/src/app"
+    depends_on:
+      - "db"
   ngrok:
     image: wernight/ngrok
     env_file: .ngrok.env
@@ -16,11 +18,21 @@ services:
       NGROK_PORT: main:3000
     ports:
       - "3001:4040"
+    depends_on:
+      - "main"
   db:
     image: mongo
     volumes:
       - "db_volume:/data/db"
     ports:
-      - "3002:27017"
+      - "3003:27017"
+  mongo-express:
+    image: mongo-express
+    ports:
+      - "3002:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: db
+    depends_on:
+      - "db"
 volumes:
   db_volume:
