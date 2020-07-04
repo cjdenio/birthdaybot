@@ -104,7 +104,7 @@ func HandleDefaultCommand(res http.ResponseWriter, req *http.Request) {
 					"type": "section",
 					"text": map[string]string{
 						"type": "mrkdwn",
-						"text": fmt.Sprintf("I already know what your birthday is! :birthday:", user, formattedDate),
+						"text": fmt.Sprintf("I already know what your birthday is; it's %s! :birthday:", formattedDate),
 					},
 				},
 			},
