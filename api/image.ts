@@ -28,6 +28,8 @@ export default async (req: NowRequest, res: NowResponse) => {
   const screenshot = await page.screenshot();
 
   res.setHeader("Content-Type", "image/png");
+  res.setHeader('Cache-Control', `public, immutable, no-transform, s-maxage=31536000, max-age=31536000`);
+  
   res.send(screenshot);
 
   await browser.close();
