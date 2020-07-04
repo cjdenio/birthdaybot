@@ -61,6 +61,11 @@ func CronHandler(res http.ResponseWriter, req *http.Request) {
 				log.Fatal(err)
 			}
 
+			userName := userInfo.DisplayName
+			if userName == "" {
+				userName = userInfo.RealName
+			}
+
 			parsedDate, err := time.Parse("2006-01-02", user["birthday"].(string))
 			formattedDate := parsedDate.Format("January 1, 2006")
 
