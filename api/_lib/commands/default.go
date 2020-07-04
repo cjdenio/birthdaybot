@@ -106,11 +106,11 @@ func HandleDefaultCommand(res http.ResponseWriter, req *http.Request) {
 						"type": "mrkdwn",
 						"text": fmt.Sprintf("I already know what your birthday is! :birthday:", user, formattedDate),
 					},
-				}
+				},
 			},
 		}
 	}
-	
+
 	b, err := json.Marshal(m)
 	if err != nil {
 		fmt.Println(err)
