@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -66,29 +67,50 @@ func HandleDefaultCommand(res http.ResponseWriter, req *http.Request) {
 
 	collection := db.Database("birthdaybot").Collection("birthdays")
 
-	collection.UpdateOne(ctx, bson.D{{Key: "user_id", Value: user}}, bson.M{"$set": bson.M{"user_id": user, "birthday": rawBirthday.Value, "date": parsedDate.Format("01-02")}}, options.Update().SetUpsert(true))
+	result, err := collection.UpdateOne(ctx, bson.D{{Key: "user_id", Value: user}}, bson.M{"$set": bson.M{"user_id": user, "birthday": rawBirthday.Value, "date": parsedDate.Format("01-02")}}, options.Update().SetUpsert(true))
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	m := map[string]interface{}{
-		"response_type": "ephemeral",
-		"blocks": []interface{}{
-			map[string]interface{}{
-				"type": "section",
-				"text": map[string]string{
-					"type": "mrkdwn",
-					"text": fmt.Sprintf("Thanks, <@%s>! I've remembered your birthday *(%s)*, and I'll post something in <#C0266FRGV> when it comes around! :tada:", user, formattedDate),
-				},
-			},
-			map[string]interface{}{
-				"type": "context",
-				"elements": []interface{}{
-					map[string]string{
+	var m map[string]interface{}
+
+	if result.ModifiedCount > 0 || result.UpsertedCount > 0 {
+		m = map[string]interface{}{
+			"response_type": "ephemeral",
+			"blocks": []interface{}{
+				map[string]interface{}{
+					"type": "section",
+					"text": map[string]string{
 						"type": "mrkdwn",
-						"text": "Type `/birthday forget` to make me forget your birthday.",
+						"text": fmt.Sprintf("Thanks, <@%s>! I've remembered your birthday *(%s)*, and I'll post something in <#C0266FRGV> when it comes around! :tada:", user, formattedDate),
+					},
+				},
+				map[string]interface{}{
+					"type": "context",
+					"elements": []interface{}{
+						map[string]string{
+							"type": "mrkdwn",
+							"text": "Type `/birthday forget` to make me forget your birthday.",
+						},
 					},
 				},
 			},
-		},
+		}
+	} else {
+		m = map[string]interface{}{
+			"response_type": "ephemeral",
+			"blocks": []interface{}{
+				map[string]interface{}{
+					"type": "section",
+					"text": map[string]string{
+						"type": "mrkdwn",
+						"text": fmt.Sprintf("I already know what your birthday is! :birthday:", user, formattedDate),
+					},
+				}
+			},
+		}
 	}
+	
 	b, err := json.Marshal(m)
 	if err != nil {
 		fmt.Println(err)
