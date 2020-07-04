@@ -67,7 +67,7 @@ func CronHandler(res http.ResponseWriter, req *http.Request) {
 			}
 
 			parsedDate, err := time.Parse("2006-01-02", user["birthday"].(string))
-			formattedDate := parsedDate.Format("January 1, 2006")
+			formattedDate := parsedDate.Format("January 2, 2006")
 
 			_, _, err = api.PostMessage(channel, slack.MsgOptionBlocks(
 				slack.NewSectionBlock(
