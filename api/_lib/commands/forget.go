@@ -39,6 +39,6 @@ func HandleForgetCommand(res http.ResponseWriter, req *http.Request) {
 	if result.DeletedCount == 0 {
 		res.Write([]byte("There's nothing to forget; I don't know what your birthday is! :shrug:"))
 	} else {
-		res.Write([]byte("Much like a relative, I've successfully forgotten your birthday. :+1:"))
+		res.Write([]byte("I've successfully forgotten your birthday. :+1: Type `/birthday` if you change your mind."))
 	}
 }
