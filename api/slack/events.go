@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 
 	"context"
 	"time"
@@ -47,12 +48,17 @@ func EventsHandler(res http.ResponseWriter, req *http.Request) {
 	case "event_callback":
 		switch body.Event["type"] {
 		case "app_home_opened":
-			fmt.Println("woot")
 			collection := db.Database("birthdaybot").Collection("birthdays")
 			cursor, err := collection.Find(ctx, bson.D{})
 
 			var results []bson.M
 			cursor.All(ctx, &results)
+			sort.Slice(results, func(i int, j int) bool {
+				timeA, _ := time.Parse("01-02", results[i]["date"].(string))
+				timeB, _ := time.Parse("01-02", results[j]["date"].(string))
+
+				return timeA.Before(timeB)
+			})
 
 			var blocks []slack.Block
 
