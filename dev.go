@@ -14,6 +14,8 @@ type handler struct{}
 func (h handler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	if regexp.MustCompile(`(?i)\/api\/slack\/command\/?`).MatchString(req.URL.Path) {
 		slack.CommandHandler(res, req)
+	} else if regexp.MustCompile(`(?i)\/api\/slack\/events\/?`).MatchString(req.URL.Path) {
+		slack.EventsHandler(res, req)
 	} else if regexp.MustCompile(`(?i)\/api\/cron\/?`).MatchString(req.URL.Path) {
 		botapi.CronHandler(res, req)
 	} else {
