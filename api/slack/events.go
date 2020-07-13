@@ -1,12 +1,11 @@
 package slack
 
 import (
+	lib "birthdaybot/lib"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"sort"
 
 	"context"
 	"time"
@@ -53,20 +52,9 @@ func EventsHandler(res http.ResponseWriter, req *http.Request) {
 
 			var results []bson.M
 			cursor.All(ctx, &results)
-			sort.Slice(results, func(i int, j int) bool {
-				timeA, _ := time.Parse("01-02", results[i]["date"].(string))
-				timeB, _ := time.Parse("01-02", results[j]["date"].(string))
 
-				return timeA.Before(timeB)
-			})
+			blocks := lib.BirthdaysToBlocks(results)
 
-			var blocks []slack.Block
-
-			for _, v := range results {
-				parsed, _ := time.Parse("2006-01-02", v["birthday"].(string))
-				formatted := parsed.Format("January 2, 2006")
-				blocks = append(blocks, slack.NewSectionBlock(slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("<@%s> - *%s*", v["user_id"], formatted), false, false), nil, nil))
-			}
 			_, err = client.PublishView(body.Event["user"].(string), slack.HomeTabViewRequest{
 				Type: slack.VTHomeTab,
 				Blocks: slack.Blocks{

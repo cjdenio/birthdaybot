@@ -1,8 +1,8 @@
 package slack
 
 import (
-	lib "birthdaybot/api/_lib"
-	"birthdaybot/api/_lib/commands"
+	"birthdaybot/lib"
+	"birthdaybot/lib/commands"
 	"io/ioutil"
 	"os"
 

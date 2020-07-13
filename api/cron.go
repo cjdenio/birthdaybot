@@ -15,7 +15,7 @@ import (
 
 	"sync"
 
-	lib "birthdaybot/api/_lib"
+	"birthdaybot/lib"
 
 	"github.com/slack-go/slack"
 )
@@ -74,7 +74,7 @@ func CronHandler(res http.ResponseWriter, req *http.Request) {
 					slack.NewTextBlockObject(
 						"mrkdwn",
 						fmt.Sprintf("It's <@%s>'s birthday! :tada: From all of your fellow Hack Clubbers, have a great one! :partyparrot:", user["user_id"]), false, false), nil, nil),
-				slack.NewImageBlock(lib.GenerateURL(userName, userInfo.Image192, formattedDate), "Happy birthday!", "image", slack.NewTextBlockObject("plain_text", "Happy birthday!", false, false)),
+				slack.NewImageBlock(lib.GenerateImageURL(userName, userInfo.Image192, formattedDate), "Happy birthday!", "image", slack.NewTextBlockObject("plain_text", "Happy birthday!", false, false)),
 				slack.NewContextBlock("context", slack.NewTextBlockObject("mrkdwn", "Want me to post something when _your_ special day comes around? Just type `/birthday` to get started!", false, false)),
 			),
 			)
