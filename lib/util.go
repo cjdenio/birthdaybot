@@ -66,5 +66,19 @@ func BirthdaysToBlocks(birthdays []bson.M) []slack.Block {
 		}
 	}
 
-	return append(upcomingBlocks, pastBlocks...)
+	var blocks []slack.Block
+	sections := [][]slack.Block{
+		upcomingBlocks,
+		pastBlocks,
+		{
+			slack.NewDividerBlock(),
+			slack.NewContextBlock("", slack.NewTextBlockObject("mrkdwn", "Add your birthday to this list with `/birthday`!", false, false)),
+		},
+	}
+
+	for _, v := range sections {
+		blocks = append(blocks, v...)
+	}
+
+	return blocks
 }
