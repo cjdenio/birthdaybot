@@ -7,6 +7,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/hako/durafmt"
 	"github.com/slack-go/slack"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -48,13 +49,14 @@ func BirthdaysToBlocks(birthdays []bson.M) []slack.Block {
 
 	for _, v := range birthdays {
 		parsed, _ := time.Parse("01-02", v["date"].(string))
-		_, nowMonth, nowDay := time.Now().Date()
+		now := time.Now()
+		_, nowMonth, nowDay := now.Date()
 		formatted := parsed.Format("January 2")
 
 		if (parsed.Month() > nowMonth) || (parsed.Month() == nowMonth && parsed.Day() > nowDay) {
 			upcomingBlocks = append(upcomingBlocks, slack.NewSectionBlock(nil, []*slack.TextBlockObject{
 				slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("<@%s>", v["user_id"]), false, false),
-				slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("*%s*", formatted), false, false),
+				slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("*%s* (in %v)", formatted, durafmt.ParseShort(time.Date(now.Year(), parsed.Month(), parsed.Day(), 0, 0, 0, 0, time.UTC).Sub(now)).LimitFirstN(2)), false, false),
 			}, nil))
 		} else {
 			pastBlocks = append(pastBlocks, slack.NewSectionBlock(nil, []*slack.TextBlockObject{
