@@ -22,6 +22,12 @@ import (
 
 // CronHandler handles the daily cron job.
 func CronHandler(res http.ResponseWriter, req *http.Request) {
+	if req.URL.Query().Get("token") != os.Getenv("CRON_TOKEN") {
+		res.WriteHeader(400)
+		res.Write([]byte("Cron request couldn't be verified. :( Nice try, though!"))
+		return
+	}
+
 	api := slack.New(os.Getenv("SLACK_TOKEN"), slack.OptionDebug(true))
 
 	db, err := mongo.NewClient(options.Client().ApplyURI(os.Getenv("DB_URL")))
@@ -68,6 +74,11 @@ func CronHandler(res http.ResponseWriter, req *http.Request) {
 
 			parsedDate, err := time.Parse("2006-01-02", user["birthday"].(string))
 			formattedDate := parsedDate.Format("January 2, 2006")
+
+			if parsedDate.Year() >= 2020 {
+				// They probably left out the year (or this code is being run years in the future)
+				formattedDate = parsedDate.Format("January 2")
+			}
 
 			_, _, err = api.PostMessage(channel, slack.MsgOptionBlocks(
 				slack.NewSectionBlock(
