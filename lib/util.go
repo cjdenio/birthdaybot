@@ -13,7 +13,7 @@ import (
 )
 
 // GenerateImageURL generate an image URL.
-func GenerateImageURL(name string, image string, date string) string {
+func GenerateImageURL(name, image, date string) string {
 	thing := url.URL{
 		Scheme: "https",
 		Host:   "hackclub-birthday-bot.now.sh",
