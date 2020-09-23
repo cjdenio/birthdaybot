@@ -19,7 +19,7 @@ export default async (req: NowRequest, res: NowResponse) => {
     height: 1080,
   });
   await page.setContent(
-    nunjucks.render(path.join(__dirname, "_lib", "image.html"), {
+    nunjucks.render(path.join(__dirname, "..", "lib", "image.html"), {
       text: req.query.text,
       image: req.query.image,
       date: req.query.date,
@@ -28,8 +28,11 @@ export default async (req: NowRequest, res: NowResponse) => {
   const screenshot = await page.screenshot();
 
   res.setHeader("Content-Type", "image/png");
-  res.setHeader('Cache-Control', `public, immutable, no-transform, s-maxage=31536000, max-age=31536000`);
-  
+  res.setHeader(
+    "Cache-Control",
+    `public, immutable, no-transform, s-maxage=31536000, max-age=31536000`
+  );
+
   res.send(screenshot);
 
   await browser.close();
