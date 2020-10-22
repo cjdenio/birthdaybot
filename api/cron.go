@@ -72,7 +72,7 @@ func CronHandler(res http.ResponseWriter, req *http.Request) {
 				userName = userInfo.RealName
 			}
 
-			parsedDate, err := time.Parse("2006-01-02", user["birthday"].(string))
+			parsedDate, _ := time.Parse("2006-01-02", user["birthday"].(string))
 			formattedDate := parsedDate.Format("January 2, 2006")
 
 			if parsedDate.Year() >= 2020 {
@@ -88,6 +88,7 @@ func CronHandler(res http.ResponseWriter, req *http.Request) {
 				slack.NewImageBlock(lib.GenerateImageURL(userName, userInfo.Image192, formattedDate), "Happy birthday!", "image", slack.NewTextBlockObject("plain_text", "Happy birthday!", false, false)),
 				slack.NewContextBlock("context", slack.NewTextBlockObject("mrkdwn", "Want me to post something when _your_ special day comes around? Just type `/birthday` to get started!", false, false)),
 			),
+				slack.MsgOptionText(fmt.Sprintf("It's %s's birthday! From all of your fellow Hack Clubbers, have a great one!", userName), false),
 			)
 			if err != nil {
 				log.Fatal(err)
